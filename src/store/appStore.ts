@@ -20,10 +20,20 @@ interface InventoryItem {
   expiryDate?: string;
 }
 
+interface NotificationSettings {
+  email: boolean;
+  push: boolean;
+  sound: boolean;
+}
+
 interface AppState {
   // Onboarding
   isOnboarded: boolean;
   setOnboarded: (value: boolean) => void;
+  
+  // Theme & UI
+  theme: 'light' | 'dark' | 'system';
+  setTheme: (theme: 'light' | 'dark' | 'system') => void;
   
   // Language
   language: Language;
@@ -46,6 +56,10 @@ interface AppState {
   updateInventoryItem: (id: string, item: Partial<InventoryItem>) => void;
   removeInventoryItem: (id: string) => void;
   
+  // Notifications
+  notifications: NotificationSettings;
+  updateNotificationSettings: (settings: Partial<NotificationSettings>) => void;
+  
   // Marketing Projects
   savedCaptions: { id: string; text: string; createdAt: string }[];
   addCaption: (text: string) => void;
@@ -58,6 +72,10 @@ export const useAppStore = create<AppState>()(
       // Onboarding
       isOnboarded: false,
       setOnboarded: (value) => set({ isOnboarded: value }),
+      
+      // Theme
+      theme: 'system',
+      setTheme: (theme) => set({ theme }),
       
       // Language
       language: 'am',
@@ -97,12 +115,27 @@ export const useAppStore = create<AppState>()(
           inventory: state.inventory.filter((i) => i.id !== id),
         })),
       
+      // Notifications
+      notifications: {
+        email: true,
+        push: true,
+        sound: true,
+      },
+      updateNotificationSettings: (settings) =>
+        set((state) => ({
+          notifications: { ...state.notifications, ...settings },
+        })),
+      
       // Marketing
       savedCaptions: [],
       addCaption: (text) =>
         set((state) => ({
           savedCaptions: [
-            { id: crypto.randomUUID(), text, createdAt: new Date().toISOString() },
+            {
+              id: crypto.randomUUID(),
+              text,
+              createdAt: new Date().toISOString(),
+            },
             ...state.savedCaptions,
           ],
         })),

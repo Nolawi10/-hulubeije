@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { useAppStore } from '@/store/appStore';
 import { getTranslation } from '@/lib/i18n';
+import { api } from '@/services/api';
+import { useEffect, useState } from 'react';
 import { 
   Sparkles, 
   Megaphone, 
@@ -12,7 +14,9 @@ import {
   Lightbulb,
   Bell,
   Settings,
-  ChevronRight
+  ChevronRight,
+  Wifi,
+  WifiOff
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import BottomNav from '@/components/BottomNav';
@@ -39,6 +43,19 @@ const featureKeys: Record<string, string> = {
 export default function Dashboard() {
   const { language, businessName, sales } = useAppStore();
   const t = (key: string) => getTranslation(language, key);
+  const [apiStatus, setApiStatus] = useState<'checking' | 'online' | 'offline'>('checking');
+
+  useEffect(() => {
+    const checkApi = async () => {
+      try {
+        await api.health();
+        setApiStatus('online');
+      } catch {
+        setApiStatus('offline');
+      }
+    };
+    checkApi();
+  }, []);
 
   const todaySales = sales.filter(
     (s) => new Date(s.date).toDateString() === new Date().toDateString()
@@ -56,23 +73,59 @@ export default function Dashboard() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-3"
           >
-            <div className="w-11 h-11 rounded-xl bg-primary-foreground/20 backdrop-blur flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-primary-foreground" />
-            </div>
+            <Link to="/" className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-primary-foreground/10 backdrop-blur flex items-center justify-center overflow-hidden border border-primary-foreground/20">
+                <img 
+                  src="/logo.png" 
+                  alt="Hulu Be Ije Logo" 
+                  className="w-10 h-10 object-contain p-0.5"
+                  onError={(e) => {
+                    // Fallback to text if image fails to load
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null;
+                    target.style.display = 'none';
+                    const fallback = document.createElement('div');
+                    fallback.className = 'w-10 h-10 flex items-center justify-center';
+                    fallback.innerHTML = '<span class="text-primary-foreground font-bold">HB</span>';
+                    target.parentNode?.insertBefore(fallback, target.nextSibling);
+                  }}
+                />
+              </div>
+            </Link>
             <div>
-              <h1 className="text-lg font-bold text-primary-foreground">TenaBiz AI</h1>
+              <h1 className="text-lg font-bold text-primary-foreground">Hulu Be Ije</h1>
               <p className="text-sm text-primary-foreground/80 font-ethiopic">
-                {businessName || t('appTagline')}
+                ሁሉ በእጄ | {businessName || t('appTagline')}
               </p>
             </div>
           </motion.div>
 
           <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-primary-foreground/20 backdrop-blur">
+              {apiStatus === 'checking' && (
+                <>
+                  <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                  <span className="text-xs text-primary-foreground">Checking...</span>
+                </>
+              )}
+              {apiStatus === 'online' && (
+                <>
+                  <Wifi className="w-3 h-3 text-green-400" />
+                  <span className="text-xs text-primary-foreground">Online</span>
+                </>
+              )}
+              {apiStatus === 'offline' && (
+                <>
+                  <WifiOff className="w-3 h-3 text-red-400" />
+                  <span className="text-xs text-primary-foreground">Offline</span>
+                </>
+              )}
+            </div>
             <LanguageSelector />
-            <button className="w-10 h-10 rounded-xl bg-primary-foreground/20 backdrop-blur flex items-center justify-center">
+            <Link to="/notifications" className="w-10 h-10 rounded-xl bg-primary-foreground/20 backdrop-blur flex items-center justify-center hover:bg-primary-foreground/30 transition-colors">
               <Bell className="w-5 h-5 text-primary-foreground" />
-            </button>
-            <Link to="/settings" className="w-10 h-10 rounded-xl bg-primary-foreground/20 backdrop-blur flex items-center justify-center">
+            </Link>
+            <Link to="/settings" className="w-10 h-10 rounded-xl bg-primary-foreground/20 backdrop-blur flex items-center justify-center hover:bg-primary-foreground/30 transition-colors">
               <Settings className="w-5 h-5 text-primary-foreground" />
             </Link>
           </div>
