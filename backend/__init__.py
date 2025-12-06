@@ -19,9 +19,16 @@ def create_app() -> Flask:
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
     def serve_frontend(path):
-        if path != "" and os.path.exists(os.path.join(app.root_path, '..', 'dist', path)):
-            return send_from_directory(os.path.join(app.root_path, '..', 'dist'), path)
+        # Get the absolute path to the dist folder
+        dist_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'dist')
+        
+        if path != "" and os.path.exists(os.path.join(dist_folder, path)):
+            return send_from_directory(dist_folder, path)
         else:
-            return send_file(os.path.join(app.root_path, '..', 'dist', 'index.html'))
+            index_path = os.path.join(dist_folder, 'index.html')
+            if os.path.exists(index_path):
+                return send_file(index_path)
+            else:
+                return f"Frontend not built. Dist folder not found at: {dist_folder}", 404
 
     return app
