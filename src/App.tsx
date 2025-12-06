@@ -16,6 +16,12 @@ import Learn from "./pages/Learn";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import VoiceMode from "./pages/VoiceMode";
+import AIStudio from "./pages/AIStudio";
+import PosterGenerator from "./pages/marketing/PosterGenerator";
+import SloganCreator from "./pages/marketing/SloganCreator";
+import ContentCalendar from "./pages/marketing/ContentCalendar";
+import AdCopyWriter from "./pages/marketing/AdCopyWriter";
+import HashtagGenerator from "./pages/marketing/HashtagGenerator";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,12 +35,18 @@ function AppRoutes() {
       <Route path="/dashboard" element={isOnboarded ? <Dashboard /> : <Navigate to="/" />} />
       <Route path="/marketing" element={<Marketing />} />
       <Route path="/marketing/caption" element={<CaptionGenerator />} />
+      <Route path="/marketing/poster" element={<PosterGenerator />} />
+      <Route path="/marketing/ad" element={<AdCopyWriter />} />
+      <Route path="/marketing/hashtag" element={<HashtagGenerator />} />
+      <Route path="/marketing/slogan" element={<SloganCreator />} />
+      <Route path="/marketing/calendar" element={<ContentCalendar />} />
       <Route path="/sales" element={<Sales />} />
       <Route path="/sales/add" element={<AddSale />} />
       <Route path="/learn" element={<Learn />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="/voice" element={<VoiceMode />} />
+      <Route path="/ai-studio" element={<AIStudio />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

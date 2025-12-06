@@ -25,19 +25,19 @@ import LanguageSelector from '@/components/LanguageSelector';
 const features = [
   { id: 'marketing', icon: Megaphone, colorClass: 'icon-container-primary', path: '/marketing' },
   { id: 'sales', icon: BarChart3, colorClass: 'icon-container-secondary', path: '/sales' },
-  { id: 'visual', icon: Camera, colorClass: 'icon-container-accent', path: '/visual' },
-  { id: 'voice', icon: Mic, colorClass: 'icon-container-primary', path: '/voice' },
-  { id: 'learn', icon: GraduationCap, colorClass: 'icon-container-secondary', path: '/learn' },
-  { id: 'price', icon: TrendingUp, colorClass: 'icon-container-accent', path: '/price' },
+  { id: 'ai-studio', icon: Sparkles, colorClass: 'icon-container-accent', path: '/ai-studio' },
+  { id: 'visual', icon: Camera, colorClass: 'icon-container-primary', path: '/visual' },
+  { id: 'voice', icon: Mic, colorClass: 'icon-container-secondary', path: '/voice' },
+  { id: 'learn', icon: GraduationCap, colorClass: 'icon-container-accent', path: '/learn' },
 ];
 
 const featureKeys: Record<string, string> = {
   marketing: 'aiMarketing',
   sales: 'salesInventory',
+  'ai-studio': 'aiStudio',
   visual: 'visualStudio',
   voice: 'voiceMode',
   learn: 'learningHub',
-  price: 'priceChecker',
 };
 
 export default function Dashboard() {
